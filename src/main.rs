@@ -51,9 +51,16 @@ fn main() {
                     match restart {
                         "yes" => {
                             random_number = get_random_num_in_range();
+                            tries = 0;
+
                             break;
                         }
-                        "no" => exit(0),
+                        "no" => {
+                            println!("Thanks for playing Guess the number game !");
+                            println!("See you soon. :)");
+
+                            exit(0)
+                        }
                         _ => continue,
                     }
                 }
