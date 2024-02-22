@@ -1,11 +1,16 @@
 use rand::Rng;
 use std::cmp::Ordering;
 use std::io;
+use std::process::exit;
+
+fn get_random_num_in_range() -> u32 {
+    rand::thread_rng().gen_range(1..=100)
+}
 
 fn main() {
     println!("Guess the number");
     let mut tries = 0;
-    let random_number = rand::thread_rng().gen_range(1..=100);
+    let mut random_number = get_random_num_in_range();
 
     loop {
         tries += 1;
@@ -16,7 +21,7 @@ fn main() {
 
         io::stdin()
             .read_line(&mut user_number)
-            .expect("Error reading using input.");
+            .expect("Error reading user input.");
 
         let user_number: u32 = match user_number.trim().parse() {
             Ok(num) => num,
@@ -30,8 +35,28 @@ fn main() {
             Ordering::Greater => println!("Too big !"),
             Ordering::Less => println!("Too small !"),
             Ordering::Equal => {
-                println!("You win 🎉🎊 ! Mystery number found in {} tries.", tries);
-                break;
+                println!("You win 🎉🎊 ! Mystery number found in {} trie(s).", tries);
+
+                loop {
+                    let mut restart = String::new();
+
+                    println!("Would you like to restart the game ? (\"yes\" / \"no\") ");
+
+                    io::stdin()
+                        .read_line(&mut restart)
+                        .expect("Error reading user input.");
+
+                    let restart = restart.trim();
+
+                    match restart {
+                        "yes" => {
+                            random_number = get_random_num_in_range();
+                            break;
+                        }
+                        "no" => exit(0),
+                        _ => continue,
+                    }
+                }
             }
         }
     }
